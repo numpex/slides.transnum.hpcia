@@ -6,6 +6,9 @@
 \usepackage{booktabs}
 \usepackage[scale=2]{ccicons}
 
+\usepackage{tikz,pgfplots}
+\usepackage{booktabs}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta}
 
 
 \title{HPC-AI convergence}
@@ -39,6 +42,32 @@
 \note[item]{Remind participants: 2h30 total across two sessions (Tuesday + Wednesday)}
 \note[item]{This material will serve the CSA (Scientific and Administrative Council)}
 \note[item]{Ask: "What must we have produced by end of workshop to consider it successful?"}
+\end{frame}
+
+\begin{frame}{The 3 Topics of HPC--AI Convergence}
+
+\begin{center}
+\begin{tikzpicture}[
+  topic/.style={rectangle, rounded corners, draw=nblue, fill=nblue!10, thick, minimum width=5cm, minimum height=1.2cm, align=center, font=\small},
+  node distance=0.6cm
+]
+  \node[topic] (T1) {\textbf{T1: AI in HPC}\\(hybrid simulation + AI components)};
+  \node[topic, below=of T1] (T2) {\textbf{T2: AI as Oracle}\\(agentic AI, dev, perf, tuning)};
+  \node[topic, below=of T2] (T3) {\textbf{T3: HPC for AI}\\(training/inference at scale, co-design)};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+\textbf{Each topic is interrogated by:}
+\begin{itemize}
+  \item Cross-cutting requirements (trust, energy, sovereignty, skills, benchmarks)
+  \item Flagship use-case: \alert{"DT operations + AI advisor"} (stress-tests all 3 topics)
+\end{itemize}
+
+\note[item]{T1 = hybrid models (surrogates, closures, inversions, neural operators)}
+\note[item]{T2 = agentic AI for dev, debug, optim (e.g., GitHub Copilot for HPC)}
+\note[item]{T3 = HPC infrastructure to train/infer LLMs and foundation models}
+\note[item]{We'll revisit each topic with cross-cutting requirements and the flagship use-case}
 \end{frame}
 
 \begin{frame}[fragile]{NumPEx theme}
