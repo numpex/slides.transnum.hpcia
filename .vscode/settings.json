@@ -1,0 +1,84 @@
+{
+    "[typst]": {
+        "editor.defaultFormatter": "myriad-dreamin.tinymist",
+        "editor.formatOnSave": true
+    },
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "xelatex",
+            "tools": [
+                "xelatexmk"
+            ]
+        },
+        {
+            "name": "Build",
+            "tools": [
+                "XeTeX"
+            ]
+        },
+        {
+            "name": "Build (bib)",
+            "tools": [
+                "XeTeX",
+                "BibTeX",
+                "XeTeX",
+                "XeTeX"
+            ]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "xelatexmk",
+            "command": "latexmk",
+            "args": [
+                "--shell-escape",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-xelatex",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "XeTeX",
+            "command": "xelatex",
+            "args": [
+                "-synctex=1",
+                "-shell-escape",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "BibTeX",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        }
+    ]
+}

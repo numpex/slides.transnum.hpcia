@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Typst: watch presentation (local fonts)",
+      "type": "shell",
+      "command": "./scripts/typst-watch.sh",
+      "args": ["presentation.template.typ"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Typst: compile presentation (local fonts)",
+      "type": "shell",
+      "command": "./scripts/typst-compile.sh",
+      "args": ["presentation.template.typ"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Typst: watch poster (local fonts)",
+      "type": "shell",
+      "command": "./scripts/typst-watch.sh",
+      "args": ["poster.template.typ"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Typst: compile poster (local fonts)",
+      "type": "shell",
+      "command": "./scripts/typst-compile.sh",
+      "args": ["poster.template.typ"],
+      "problemMatcher": []
+    }
+  ]
+}

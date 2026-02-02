@@ -1,0 +1,57 @@
+[project]
+name = "presentation-template"
+version = "1.1.0"
+description = "NumPEx presentation and poster templates for LaTeX/Beamer and Typst"
+
+[tool.article-cli]
+# Project configuration
+[tool.article-cli.project]
+type = "presentation"
+engines = ["latex", "typst"]
+
+[tool.article-cli.presentation]
+theme = "numpex"
+aspect_ratio = "169"
+
+[tool.article-cli.documents]
+# LaTeX documents
+main = "presentation.template.tex"
+additional = ["poster.template.tex"]
+# Typst documents
+main_typst = "presentation.template.typ"
+additional_typst = ["poster.template.typ"]
+
+[tool.article-cli.latex]
+engine = "xelatex"
+shell_escape = true
+build_dir = "build/tex"
+
+[tool.article-cli.typst]
+font_paths = ["fonts/Marianne/desktop", "fonts/Roboto/static"]
+build_dir = "build/typst"
+
+[tool.article-cli.workflow]
+output_dir = "build"
+fonts_dir = "fonts"
+install_fonts = true
+
+[tool.article-cli.git]
+default_branch = "main"
+
+[tool.article-cli.fonts]
+directory = "fonts"
+# Use GitHub releases for reliable font downloads
+sources = [
+    { name = "Roboto", url = "https://github.com/googlefonts/roboto/releases/download/v2.138/roboto-unhinted.zip", description = "Google's sans-serif font family" },
+    { name = "Roboto Mono", url = "https://github.com/googlefonts/RobotoMono/archive/refs/heads/main.zip", description = "Google's monospace font, good for code" }
+]
+
+[tool.article-cli.theme]
+name = "numpex"
+latex_files = [
+    "beamerthemenumpex.sty",
+    "beamercolorthemenumpex.sty",
+    "beamerfontthemenumpex.sty"
+]
+typst_files = ["numpex.typ"]
+shared_directories = ["images", "fonts"]

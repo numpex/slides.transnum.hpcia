@@ -1,0 +1,287 @@
+\documentclass[final]{beamer}
+\usepackage[size=a0,scale=1.4]{beamerposter}
+\usetheme{numpex}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\scriptsize, % Set the font and size for code listings
+  breaklines=true,                  % Automatically break lines
+  breakatwhitespace=true,          % Break lines at whitespace
+  numbers=left,                    % Add line numbers on the left
+  numberstyle=\tiny,               % Set the style for line numbers
+  frame=single,                   % Add a frame around the code
+  showspaces=false,               % Do not show spaces
+  showstringspaces=false,         % Do not show spaces in strings
+  showtabs=false,                 % Do not show tabs
+  tabsize=2                       % Set the tab size
+}
+
+
+% 1) Set a poster background
+\setbeamertemplate{background}{
+  \begin{tikzpicture}[remember picture,overlay]
+    \node at (current page.center)      {\includegraphics[height=\paperheight, keepaspectratio=false]{images/NumPEx_1.pdf}};
+  \end{tikzpicture}
+}
+
+
+% 2) Override block colors for a white background
+\setbeamercolor{block title}{bg=white, fg=blue!60!black}
+\setbeamercolor{block body}{bg=white, fg=black}
+
+% 3) Headline with a larger white rectangle (5cm high) and updated logos (3cm high)
+\setbeamertemplate{headline}{
+  \begin{tikzpicture}[remember picture,overlay]
+    % White headline background (5cm tall)
+    \fill[white] (current page.north west) rectangle ([yshift=-5cm] current page.north east);
+
+    % Left logos
+    \node[anchor=north west, inner sep=0.5cm] at (current page.north west)
+      {%
+        \includegraphics[height=3cm]{images/rf.png}\hspace{0.3cm}%
+        \includegraphics[height=3cm]{images/f2030.png}%
+      };
+
+    % Right logos
+    \node[anchor=north east, inner sep=0.5cm] at (current page.north east)
+      {%
+        \includegraphics[height=3cm]{images/cea.jpg}\hspace{0.3cm}%
+        \includegraphics[height=3cm]{images/inria.png}\hspace{0.3cm}%
+        \includegraphics[height=3cm]{images/cnrs.png}%
+      };
+
+    % Title (centered in the white area)
+    \node[anchor=south, yshift=0.5cm] at ([yshift=-5cm] current page.north)
+    {\parbox{\paperwidth}{\centering
+      {\usebeamerfont{title}\color{black}\inserttitle\par\vspace{0.3cm}
+       {\usebeamerfont{author}\color{black}\insertauthor\par}}
+    }};
+  \end{tikzpicture}
+}
+
+% 4) Footline: a white rectangle (2cm tall) with logos and centered text
+\setbeamertemplate{footline}{
+  \begin{tikzpicture}[remember picture,overlay]
+    % White footline background (2cm tall)
+    \fill[white] (current page.south west) rectangle ([yshift=2cm] current page.south east);
+
+    % Left logos in footline (scaled to 1.5cm height)
+    \node[anchor=south west, inner sep=0.5cm] at (current page.south west)
+      {%
+        \includegraphics[height=1.5cm]{images/rf.png}\hspace{0.2cm}%
+        \includegraphics[height=1.5cm]{images/f2030.png}%
+      };
+
+    % Right logos in footline (scaled to 1.5cm height)
+    \node[anchor=south east, inner sep=0.5cm] at (current page.south east)
+      {%
+        \includegraphics[height=1.5cm]{images/cea.jpg}\hspace{0.2cm}%
+        \includegraphics[height=1.5cm]{images/inria.png}\hspace{0.2cm}%
+        \includegraphics[height=1.5cm]{images/cnrs.png}%
+      };
+
+    % Centered footline text (e.g. institute and date)
+    \node[anchor=south] at ([yshift=0.5cm] current page.south)
+      {\parbox{\paperwidth}{\centering
+      {\usebeamerfont{footline}\usebeamercolor[fg]{footline}\insertinstitute \quad \insertdate}}};
+  \end{tikzpicture}
+}
+\setbeamercolor{block title}{ use=normal text,  bg=purple!15!white, fg=black }
+\setbeamertemplate{block begin}{
+  \begin{beamercolorbox}[wd=\linewidth,sep=5pt,shadow=true,rounded=true]{block title}%
+    \usebeamerfont{block title}\insertblocktitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=\linewidth,sep=5pt,rounded=true]{block body}%
+    \usebeamerfont{block body}%
+}
+\setbeamertemplate{block end}{
+  \end{beamercolorbox}
+}
+
+
+\title{A Poster Beamer Theme for NumPEx}
+\author{Alfredo Buttari, Christophe Prud'homme}
+\institute{Institute or Miscellaneous Information}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[t,fragile]{}
+  % Leave space for the headline (5cm tall)
+  \vspace*{5cm}
+  \begin{center}
+    % Use a centered minipage 90% of the poster width
+    \begin{minipage}{0.9\paperwidth}
+      \begin{columns}[t,totalwidth=\textwidth]
+
+        % Column 1
+        \column{0.32\textwidth}
+          \begin{block}{Theme Overview}
+            The NumPEx theme is a Beamer theme with minimal visual noise inspired by the HSRM theme. It emphasizes a clean design with elegant typography (using the Marianne font, so XeTeX is required).
+            \vspace{0.3cm}
+            \textbf{Enable the theme by loading:}
+            \begin{verbatim}
+\usetheme{numpex}
+            \end{verbatim}
+            \vspace{0.3cm}
+            See the French state graphic guidelines:
+            \begin{center}
+              \alert{\href{https://www.info.gouv.fr/marque-de-letat}{Charte graphique de l'Etat Français}}
+            \end{center}
+          \end{block}
+
+          \vspace{0.5cm}
+
+          \begin{block}{Sections \& Typography}
+            Sections group slides on the same topic. For example:
+            \begin{verbatim}
+\section{Elements}
+            \end{verbatim}
+            The theme provides sensible defaults for:
+            \begin{itemize}
+              \item \emph{Emphasis} on key text.
+              \item \alert{Accents} on important parts.
+              \item \textbf{Bold} for results.
+              \item Also \textbf{\emph{combine}} the previous ones.
+            \end{itemize}
+          \end{block}
+
+        % Column 2
+        \column{0.32\textwidth}
+          \begin{block}{Lists, Descriptions \& Animation}
+            \textbf{Lists:}
+            \begin{itemize}
+              \item Milk, Eggs, Potatoes.
+            \end{itemize}
+            \textbf{Enumerations:}
+            \begin{enumerate}
+              \item First, \item Second, \item Last.
+            \end{enumerate}
+            \textbf{Descriptions:}
+            \begin{description}
+              \item[PowerPoint] Meeh.
+              \item[Beamer] Yeeeha.
+            \end{description}
+            \textbf{Animation:}
+            \begin{itemize}
+              \item \alert{This is really important.}
+              \item Now this.
+              \item And now this.
+            \end{itemize}
+          \end{block}
+
+          \vspace{0.5cm}
+
+          \begin{block}{Tables}
+            \begin{table}
+              \caption{Largest cities in the world (source: Wikipedia)}
+              \begin{tabular}{lr}
+                \toprule
+                City & Population\\
+                \midrule
+                Mexico City & 20,116,842\\
+                Shanghai & 19,210,000\\
+                Peking & 15,796,450\\
+                Istanbul & 14,160,467\\
+                \bottomrule
+              \end{tabular}
+            \end{table}
+          \end{block}
+
+        % Column 3
+        \column{0.32\textwidth}
+          \begin{block}{Blocks \& Math}
+            \begin{block}{Simple Block}
+              Hello
+            \end{block}
+
+            \vspace{0.3cm}
+            \textbf{Mathematics:}
+            \[
+              e = \lim_{n\to \infty} {\left(1 + \frac{1}{n}\right)}^n
+            \]
+          \end{block}
+          \vspace{0.5cm}
+          \begin{exampleblock}{Example Block}
+            Hello
+          \end{exampleblock}
+
+          \vspace{0.5cm}
+          \begin{block}{Line Plots \& Bar Charts}
+            \textbf{Line Plot:}
+            \begin{center}
+              \begin{tikzpicture}[domain=0:4, scale=1.5, every node/.style={scale=0.7}]
+                \draw[very thin,color=gray] (-0.1,-1.1) grid (3.9,3.9);
+                \draw[->] (-0.2,0) -- (4.2,0) node[right, font=\scriptsize] {$x$};
+                \draw[->] (0,-1.2) -- (0,4.2) node[above, font=\scriptsize] {$f(x)$};
+                \draw[color=red] plot (\x,\x) node[right, font=\scriptsize] {$f(x)=x$};
+                \draw[color=blue] plot (\x,{sin(\x r)}) node[right, font=\scriptsize] {$f(x)=\sin x$};
+                \draw[color=orange] plot (\x,{0.05*exp(\x)}) node[right, font=\scriptsize] {$f(x)=\frac{1}{20}e^x$};
+              \end{tikzpicture}
+            \end{center}
+            \vspace{0.3cm}
+            \textbf{Bar Chart:}
+            \begin{center}
+              \begin{tikzpicture}[scale=1.5, every node/.style={scale=0.8}]
+                \begin{axis}[
+                  x tick label style={/pgf/number format/1000 sep=},
+                  ylabel={\scriptsize Population},
+                  enlargelimits=0.15,
+                  legend style={at={(0.5,-0.15)},anchor=north,legend columns=-1, font=\scriptsize},
+                  ybar,
+                  bar width=5pt,
+                  tick label style={font=\scriptsize},
+                  label style={font=\scriptsize},
+                ]
+                  \addplot [color=red, fill=red!30] coordinates {(1930,50e6) (1940,33e6) (1950,40e6) (1960,50e6) (1970,70e6)};
+                  \addplot [color=blue, fill=blue!30] coordinates {(1930,38e6) (1940,42e6) (1950,43e6) (1960,45e6) (1970,65e6)};
+                  \addplot [color=green, fill=green!30] coordinates {(1930,15e6) (1940,12e6) (1950,13e6) (1960,25e6) (1970,35e6)};
+                  \addplot[red,sharp plot,update limits=false] coordinates {(1910,4.3e7) (1990,4.3e7)}
+                    node[above, font=\scriptsize] at (axis cs:1950,4.3e7) {Houses};
+                  \legend{{\scriptsize Far},{\scriptsize Near},{\scriptsize Here},{\scriptsize Annot}}
+                \end{axis}
+              \end{tikzpicture}
+            \end{center}
+
+          \end{block}
+
+          \vspace{0.5cm}
+
+          \begin{exampleblock}{Code Example}
+            \begin{lstlisting}[basicstyle=\tt\scriptsize, showlines=true]
+              program pippo
+                integer, parameter :: m=10, n=5
+                real(kind(1.d0)), allocatable :: a(:,:)
+                allocate(a(m,n))
+                call random_number(a)
+                call do_something(a)
+                write(*,'("Hello world")')
+                stop
+              end program pippo
+                          \end{lstlisting}
+          \end{exampleblock}
+
+          \begin{block}{Conclusion}
+            Get the source of this theme and the demo presentation from:
+            \begin{center}\small
+              \url{https://github.com/numpex/presentation.template/}
+            \end{center}
+          \end{block}
+
+      \end{columns}
+    \end{minipage}
+  \end{center}
+\end{frame}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% TeX-engine: xetex
+%%% TeX-command-extra-options: "--synctex=1"
+%%% End:

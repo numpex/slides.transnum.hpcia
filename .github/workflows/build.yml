@@ -1,0 +1,501 @@
+name: Compile LaTeX & Typst and Release PDFs
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      skip_latex:
+        description: 'Skip LaTeX build'
+        required: false
+        default: false
+        type: boolean
+      skip_typst:
+        description: 'Skip Typst build'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  workflow-setup:
+    name: Workflow Setup
+    runs-on: ubuntu-24.04
+    outputs:
+      runner: ${{ steps.texlive_runner.outputs.runner }}
+      prefix: ${{ steps.doc_prefix.outputs.prefix }}
+      prefixwithref: ${{ steps.doc_prefix.outputs.prefixwithref }}
+      pdf: ${{ steps.doc_prefix.outputs.pdf }}
+      tex: ${{ steps.doc_prefix.outputs.tex }}
+      skip_latex: ${{ steps.skip_check_final.outputs.skip_latex }}
+      skip_typst: ${{ steps.skip_check_final.outputs.skip_typst }}
+    steps:
+      - name: Get TeXLive Runner
+        id: texlive_runner
+        run: |
+          if ! [ -z "$GH_TOKEN" ]; then
+            runners=$(gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /orgs/${{ github.repository_owner }}/actions/runners)
+            texlive=$(echo $runners | jq --arg label "self-texlive" '[.runners[] | any(.labels[]; .name == $label) and .status == "online"] | any')
+            if [ "$texlive" = "false" ]; then
+               echo "runner=ubuntu-latest" >> "$GITHUB_OUTPUT"
+            else
+                echo "runner=self-texlive" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "runner=ubuntu-latest" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN_RUNNER }}
+
+      - name: Get Document Prefix
+        id: doc_prefix
+        run: |
+          prefix=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          echo "prefix=$prefix" >> "$GITHUB_OUTPUT"
+          prefixwithref=$(echo "$prefix")-${{ github.ref_name }}
+          echo "prefixwithref=$prefixwithref" >> "$GITHUB_OUTPUT"
+          echo "pdf=$prefixwithref.pdf" >> "$GITHUB_OUTPUT"
+          echo "tex=$prefix.tex" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout for skip check
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Check skip flags and config
+        id: skip_check_final
+        run: |
+          # Check workflow dispatch inputs
+          SKIP_LATEX="${{ inputs.skip_latex }}"
+          SKIP_TYPST="${{ inputs.skip_typst }}"
+
+          # Check commit message for skip flags
+          # Supported: [skip latex], [skip tex], [skip typst], [skip typ]
+          COMMIT_MSG=$(git log -1 --pretty=%B 2>/dev/null || echo "")
+          if echo "$COMMIT_MSG" | grep -iqE '\[skip (latex|tex)\]'; then
+            SKIP_LATEX="true"
+          fi
+          if echo "$COMMIT_MSG" | grep -iqE '\[skip (typst|typ)\]'; then
+            SKIP_TYPST="true"
+          fi
+
+          # Check pyproject.toml for enabled engines
+          # Format: engines = ["latex", "typst"]
+          if [ -f "pyproject.toml" ]; then
+            ENGINES=$(grep -A1 '\[tool.article-cli.project\]' pyproject.toml | grep 'engines' || echo "")
+            if [ -n "$ENGINES" ]; then
+              # If engines is defined, check if latex/typst are included
+              if ! echo "$ENGINES" | grep -q '"latex"' && ! echo "$ENGINES" | grep -q "'latex'"; then
+                echo "LaTeX not in engines list, skipping"
+                SKIP_LATEX="true"
+              fi
+              if ! echo "$ENGINES" | grep -q '"typst"' && ! echo "$ENGINES" | grep -q "'typst'"; then
+                echo "Typst not in engines list, skipping"
+                SKIP_TYPST="true"
+              fi
+            fi
+          fi
+
+          echo "skip_latex=${SKIP_LATEX:-false}" >> "$GITHUB_OUTPUT"
+          echo "skip_typst=${SKIP_TYPST:-false}" >> "$GITHUB_OUTPUT"
+          echo "Skip LaTeX: ${SKIP_LATEX:-false}"
+          echo "Skip Typst: ${SKIP_TYPST:-false}"
+
+      - name: Show Outputs
+        run: |
+          echo "runner=${{ steps.texlive_runner.outputs.runner }}"
+          echo "prefix=${{ steps.doc_prefix.outputs.prefix }}"
+          echo "prefixwithref=${{ steps.doc_prefix.outputs.prefixwithref }}"
+          echo "pdf=${{ steps.doc_prefix.outputs.pdf }}"
+          echo "tex=${{ steps.doc_prefix.outputs.tex }}"
+          echo "skip_latex=${{ steps.skip_check_final.outputs.skip_latex }}"
+          echo "skip_typst=${{ steps.skip_check_final.outputs.skip_typst }}"
+
+  build_latex:
+    needs: workflow-setup
+    if: needs.workflow-setup.outputs.skip_latex != 'true'
+    runs-on: ${{ needs.workflow-setup.outputs.runner }}
+    name: Build LaTeX Artifact
+    env:
+      VERSION: ${{ github.ref_name }}
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+        with:
+          clean: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install article-cli
+        run: |
+          pip install --no-cache-dir 'article-cli>=1.4.0'
+
+      - name: Setup git hooks
+        run: |
+          article-cli setup
+
+      - name: Install fonts
+        run: |
+          # Install Roboto fonts alongside the committed Marianne fonts
+          # Don't delete fonts/ - it contains Marianne fonts committed to the repo
+          article-cli install-fonts
+
+      - name: Compile LaTeX document (ubuntu-latest)
+        uses: xu-cheng/latex-action@v3
+        if: ${{ needs.workflow-setup.outputs.runner == 'ubuntu-latest' }}
+        with:
+          root_file: ${{ needs.workflow-setup.outputs.tex }}
+          latexmk_shell_escape: true
+          latexmk_use_xelatex: true
+          post_compile: "latexmk -c; rm -rf _minted*"
+
+      - name: Compile LaTeX document (self-hosted)
+        if: ${{ needs.workflow-setup.outputs.runner == 'self-texlive' }}
+        run: |
+          article-cli compile ${{ needs.workflow-setup.outputs.tex }} --engine xelatex --shell-escape
+
+      - name: Compile Poster (ubuntu-latest)
+        uses: xu-cheng/latex-action@v3
+        if: ${{ needs.workflow-setup.outputs.runner == 'ubuntu-latest' }}
+        with:
+          root_file: poster.template.tex
+          latexmk_shell_escape: true
+          latexmk_use_xelatex: true
+          post_compile: "latexmk -c; rm -rf _minted*"
+
+      - name: Compile Poster (self-hosted)
+        if: ${{ needs.workflow-setup.outputs.runner == 'self-texlive' }}
+        run: |
+          article-cli compile poster.template.tex --engine xelatex --shell-escape
+
+      - name: Rename PDF
+        run: mv ${{ needs.workflow-setup.outputs.prefix }}.pdf ${{ needs.workflow-setup.outputs.pdf }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.prefixwithref }}
+          path: |
+            ./*.tex
+            ./*.bib
+            ./*.gin
+            ./*.bbl
+            ./${{ needs.workflow-setup.outputs.pdf }}
+            ./poster.template.pdf
+            ./README.md
+            ./hooks*
+            ./img*
+            ./fonts/*
+            ./dat*
+            ./*.png
+            ./*.sty
+            ./exclude.txt
+            ./sections*
+            ./litterature*
+            ./images*
+            ./pyproject.toml
+            !./.git*
+            !./.github*
+            !./.vscode*
+            !./.idea*
+            !./.DS_Store*
+            !./.gitignore*
+
+      - name: Upload Presentation PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.pdf }}
+          path: ${{ needs.workflow-setup.outputs.pdf }}
+
+      - name: Upload Poster PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: poster.template.pdf
+          path: poster.template.pdf
+
+      - name: Add PDF to Job Summary
+        run: |
+          echo "## 📄 Compiled PDFs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Document | Pages | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|------|" >> $GITHUB_STEP_SUMMARY
+          pdf_pages=$(pdfinfo ${{ needs.workflow-setup.outputs.pdf }} 2>/dev/null | grep "Pages:" | awk '{print $2}' || echo "N/A")
+          pdf_size=$(ls -lh ${{ needs.workflow-setup.outputs.pdf }} | awk '{print $5}')
+          echo "| 🎯 Presentation | $pdf_pages | $pdf_size |" >> $GITHUB_STEP_SUMMARY
+          poster_pages=$(pdfinfo poster.template.pdf 2>/dev/null | grep "Pages:" | awk '{print $2}' || echo "N/A")
+          poster_size=$(ls -lh poster.template.pdf | awk '{print $5}')
+          echo "| 📋 Poster | $poster_pages | $poster_size |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 **Artifact**: \`${{ needs.workflow-setup.outputs.prefixwithref }}\`" >> $GITHUB_STEP_SUMMARY
+
+  build_typst:
+    needs: workflow-setup
+    if: needs.workflow-setup.outputs.skip_typst != 'true'
+    runs-on: ubuntu-latest
+    name: Build Typst Artifact
+    env:
+      VERSION: ${{ github.ref_name }}
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+        with:
+          clean: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install article-cli
+        run: |
+          pip install --no-cache-dir 'article-cli>=1.4.0'
+
+      - name: Install Typst
+        uses: typst-community/setup-typst@v4
+
+      - name: Install fonts
+        run: |
+          article-cli install-fonts
+
+      - name: Compile Typst Presentation
+        run: |
+          article-cli compile presentation.template.typ --font-path fonts/Marianne/desktop --font-path fonts/Roboto/static
+
+      - name: Compile Typst Poster
+        run: |
+          article-cli compile poster.template.typ --font-path fonts/Marianne/desktop --font-path fonts/Roboto/static
+
+      - name: Rename Typst PDFs
+        run: |
+          mv presentation.template.pdf ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf
+          mv poster.template.pdf poster-typst-${{ github.ref_name }}.pdf
+
+      - name: Upload Typst Presentation PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf
+          path: ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf
+
+      - name: Upload Typst Poster PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: poster-typst-${{ github.ref_name }}.pdf
+          path: poster-typst-${{ github.ref_name }}.pdf
+
+      - name: Upload Typst Artifact Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}
+          path: |
+            ./*.typ
+            ./numpex.typ
+            ./${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf
+            ./poster-typst-${{ github.ref_name }}.pdf
+            ./README.md
+            ./fonts/*
+            ./images*
+            ./pyproject.toml
+            !./.git*
+            !./.github*
+            !./.vscode*
+            !./.idea*
+            !./.DS_Store*
+
+      - name: Add Typst PDF to Job Summary
+        run: |
+          echo "## 📄 Compiled Typst PDFs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Document | Pages | Size |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|------|" >> $GITHUB_STEP_SUMMARY
+          pdf_pages=$(pdfinfo ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf 2>/dev/null | grep "Pages:" | awk '{print $2}' || echo "N/A")
+          pdf_size=$(ls -lh ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf | awk '{print $5}')
+          echo "| 🎯 Typst Presentation | $pdf_pages | $pdf_size |" >> $GITHUB_STEP_SUMMARY
+          poster_pages=$(pdfinfo poster-typst-${{ github.ref_name }}.pdf 2>/dev/null | grep "Pages:" | awk '{print $2}' || echo "N/A")
+          poster_size=$(ls -lh poster-typst-${{ github.ref_name }}.pdf | awk '{print $5}')
+          echo "| 📋 Typst Poster | $poster_pages | $poster_size |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 **Artifact**: \`${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+
+  check_latex:
+    needs: [build_latex, workflow-setup]
+    if: needs.workflow-setup.outputs.skip_latex != 'true'
+    runs-on: ${{ needs.workflow-setup.outputs.runner }}
+    name: Check LaTeX Artifact
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.prefixwithref }}
+          path: ${{ github.workspace }}/artifact
+
+      - name: List Artifact
+        run: ls -R ${{ github.workspace }}
+
+      - name: Check compilation (ubuntu-latest)
+        if: ${{ needs.workflow-setup.outputs.runner == 'ubuntu-latest' }}
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: ${{ needs.workflow-setup.outputs.tex }}
+          latexmk_shell_escape: true
+          latexmk_use_xelatex: true
+          post_compile: "latexmk -c; rm -rf _minted*"
+          working_directory: ${{ github.workspace }}/artifact
+
+      - name: Set up Python (self-hosted)
+        if: ${{ needs.workflow-setup.outputs.runner == 'self-texlive' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install article-cli (self-hosted)
+        if: ${{ needs.workflow-setup.outputs.runner == 'self-texlive' }}
+        run: |
+          pip install --no-cache-dir 'article-cli>=1.4.0'
+
+      - name: Check compilation (self-hosted)
+        if: ${{ needs.workflow-setup.outputs.runner == 'self-texlive' }}
+        run: |
+          article-cli compile ${{ needs.workflow-setup.outputs.tex }} --engine xelatex --shell-escape
+        working-directory: ${{ github.workspace }}/artifact
+
+      - name: Check poster compilation (self-hosted)
+        if: ${{ needs.workflow-setup.outputs.runner == 'self-texlive' }}
+        run: |
+          article-cli compile poster.template.tex --engine xelatex --shell-escape
+        working-directory: ${{ github.workspace }}/artifact
+
+  check_typst:
+    needs: [build_typst, workflow-setup]
+    if: needs.workflow-setup.outputs.skip_typst != 'true'
+    runs-on: ubuntu-latest
+    name: Check Typst Artifact
+    steps:
+      - name: Download Typst Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}
+          path: ${{ github.workspace }}/artifact
+
+      - name: List Artifact
+        run: ls -R ${{ github.workspace }}/artifact
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install article-cli
+        run: |
+          pip install --no-cache-dir 'article-cli>=1.4.0'
+
+      - name: Install Typst
+        uses: typst-community/setup-typst@v4
+
+      - name: Check Typst Presentation compilation
+        run: |
+          article-cli compile presentation.template.typ --font-path fonts/Marianne/desktop --font-path fonts/Roboto/static
+        working-directory: ${{ github.workspace }}/artifact
+
+      - name: Check Typst Poster compilation
+        run: |
+          article-cli compile poster.template.typ --font-path fonts/Marianne/desktop --font-path fonts/Roboto/static
+        working-directory: ${{ github.workspace }}/artifact
+
+  release:
+    needs: [workflow-setup, build_latex, build_typst, check_latex, check_typst]
+    if: |
+      always() &&
+      startsWith(github.ref, 'refs/tags/v') &&
+      (needs.build_latex.result == 'success' || needs.build_typst.result == 'success')
+    runs-on: ${{ needs.workflow-setup.outputs.runner }}
+    name: Create Release
+    steps:
+      - name: Download LaTeX Artifact
+        if: needs.build_latex.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.prefixwithref }}
+          path: ${{ github.workspace }}/artifact
+
+      - name: Download Typst Presentation PDF
+        if: needs.build_typst.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf
+          path: ${{ github.workspace }}/typst
+
+      - name: Download Typst Poster PDF
+        if: needs.build_typst.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: poster-typst-${{ github.ref_name }}.pdf
+          path: ${{ github.workspace }}/typst
+
+      - name: Download Typst Artifact Bundle
+        if: needs.build_typst.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}
+          path: ${{ github.workspace }}/typst-artifact
+
+      - name: Archive LaTeX Article
+        if: needs.build_latex.result == 'success'
+        run: |
+          temp_dir=$(mktemp -d)
+          tar -czvf "${temp_dir}/${{ needs.workflow-setup.outputs.prefixwithref }}.tar.gz" -C artifact ./
+          mv "${temp_dir}/${{ needs.workflow-setup.outputs.prefixwithref }}.tar.gz" ./
+          rm -rf "$temp_dir"
+
+      - name: Archive Typst Article
+        if: needs.build_typst.result == 'success'
+        run: |
+          temp_dir=$(mktemp -d)
+          tar -czvf "${temp_dir}/${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.tar.gz" -C typst-artifact ./
+          mv "${temp_dir}/${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.tar.gz" ./
+          rm -rf "$temp_dir"
+
+      - name: Collect release files
+        id: collect_files
+        run: |
+          FILES=""
+          if [ -f "artifact/${{ needs.workflow-setup.outputs.prefixwithref }}.pdf" ]; then
+            FILES="${FILES}artifact/${{ needs.workflow-setup.outputs.prefixwithref }}.pdf\n"
+          fi
+          if [ -f "artifact/poster.template.pdf" ]; then
+            FILES="${FILES}artifact/poster.template.pdf\n"
+          fi
+          if [ -f "typst/${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf" ]; then
+            FILES="${FILES}typst/${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.pdf\n"
+          fi
+          if [ -f "typst/poster-typst-${{ github.ref_name }}.pdf" ]; then
+            FILES="${FILES}typst/poster-typst-${{ github.ref_name }}.pdf\n"
+          fi
+          if [ -f "${{ needs.workflow-setup.outputs.prefixwithref }}.tar.gz" ]; then
+            FILES="${FILES}${{ needs.workflow-setup.outputs.prefixwithref }}.tar.gz\n"
+          fi
+          if [ -f "${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.tar.gz" ]; then
+            FILES="${FILES}${{ needs.workflow-setup.outputs.prefix }}-typst-${{ github.ref_name }}.tar.gz\n"
+          fi
+          echo -e "$FILES" > release_files.txt
+          cat release_files.txt
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') || contains(github.ref, 'preview') }}
+          name: Release ${{ github.ref_name }}
+          generate_release_notes: true
+          tag_name: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            artifact/*.pdf
+            typst/*.pdf
+            *.tar.gz
+          fail_on_unmatched_files: false

@@ -1,0 +1,37 @@
+# LaTeX artifacts
+_minted*
+*.aux
+*.bbl
+*.log
+*.blg
+*.out
+*.pyg
+*.fls
+*.synctex.gz
+*.toc
+*.fdb_latexmk
+*.idx
+*.ilg
+*.ind
+*.nav
+*.xdv
+*.snm
+*.vrb
+*.chl
+*.lof
+*.lot
+*.dvi
+svg-inkscape/
+
+# Build output directories (TeX and Typst PDFs go here)
+build/
+
+# Root-level PDFs (in case of accidental direct compilation)
+presentation.template.pdf
+poster.template.pdf
+
+# Misc
+*.zip
+*.html
+__MACOSX/
+.DS_Store

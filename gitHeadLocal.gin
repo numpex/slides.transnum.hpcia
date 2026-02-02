@@ -1,0 +1,17 @@
+\usepackage[%
+        shash={6cc7f65},
+        lhash={6cc7f65f29dc57f2ddccc8798e3905dd5fbbfb6b},
+        authname={Alfredo Buttari},
+        authemail={alfredo.buttari@gmail.com},
+        authsdate={2025-03-31},
+        authidate={2025-03-31 13:23:59 +0200},
+        authudate={1743420239},
+        commname={GitHub},
+        commemail={noreply@github.com},
+        commsdate={2025-03-31},
+        commidate={2025-03-31 13:23:59 +0200},
+        commudate={1743420239},
+        refnames={ (HEAD -> main, tag: v1.0.2, origin/main, origin/HEAD)},
+        firsttagdescribe={v1.0.2},
+        reltag={v1.0.2-0-g6cc7f65}
+    ]{gitexinfo}

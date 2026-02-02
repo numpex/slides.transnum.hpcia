@@ -1,0 +1,69 @@
+\ProvidesPackage{beamerfontthemenumpex}
+
+\ifxetex
+\RequirePackage{fontspec}
+\defaultfontfeatures{Mapping=tex-text}
+
+% Marianne fonts (for sans-serif parts)
+\setsansfont[
+  Path = fonts/Marianne/desktop/,
+  BoldFont = {Marianne-Bold.otf},
+  ItalicFont = {Marianne-RegularItalic.otf},
+  BoldItalicFont = {Marianne-BoldItalic.otf},
+  Extension = .otf
+]{Marianne-Regular.otf}
+
+\newfontfamily\ExtraLight[
+  Path = fonts/Marianne/desktop/,
+  Extension = .otf
+]{Marianne-Light.otf}
+
+\newfontfamily\Light[
+  Path = fonts/Marianne/desktop/,
+  Extension = .otf
+]{Marianne-Light.otf}
+
+\newfontfamily\Book[
+  Path = fonts/Marianne/desktop/,
+  Extension = .otf
+]{Marianne-Regular.otf}
+
+\newfontfamily\Medium[
+  Path = fonts/Marianne/desktop/,
+  Extension = .otf
+]{Marianne-Medium.otf}
+
+% Use RobotoMono for monospaced text (for code and \tt)
+\setmonofont[
+  Path = fonts/Roboto/static/,
+  BoldFont = {RobotoMono-Bold.ttf},
+  ItalicFont = {RobotoMono-Italic.ttf},
+  BoldItalicFont = {RobotoMono-BoldItalic.ttf},
+  Extension = .ttf
+]{RobotoMono-Regular.ttf}
+
+\AtBeginEnvironment{tabular}{\setsansfont[
+  Path = fonts/Marianne/desktop/,
+  BoldFont = {Marianne-Bold.otf},
+  Extension = .otf,
+  Numbers = {Monospaced}
+]{Marianne-Regular.otf}}
+
+\setbeamerfont{title}{family=\Book, size=\huge}
+\setbeamerfont{author}{family=\ExtraLight, size=\small}
+\setbeamerfont{date}{family=\ExtraLight, size=\small}
+\setbeamerfont{section title}{family=\Book, size=\huge}
+\setbeamerfont{block title}{family=\Book, size=\normalsize}
+\setbeamerfont{block title alerted}{family=\Book, size=\normalsize}
+\setbeamerfont{subtitle}{family=\Light, size=\fontsize{12}{14}}
+\setbeamerfont{frametitle}{family=\Book, size=\large}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{caption name}{family=\Book}
+\setbeamerfont{description item}{family=\Book}
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+
+\else
+\setbeamerfont{section title}{family=\tt, size=\Large}
+\setbeamerfont{title}{family=\tt, size=\Large}
+\AtBeginEnvironment{tabular}{\tt}
+\fi

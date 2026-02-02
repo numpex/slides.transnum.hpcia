@@ -1,0 +1,37 @@
+cff-version: 1.2.0 
+message: If you use this software, please cite it as below.
+authors:
+- family-names: Buttari
+  given-names: Alfredo
+  orcid: 'https://orcid.org/0000-0003-3207-7021'
+  affiliation: "Institut de Recherche en Informatique de Toulouse"
+  email: alfredo.buttari@irit.fr
+- family-names: Prud'homme
+  given-names: Christophe
+  orcid: 'https://orcid.org/0000-0003-2287-2961'
+  affiliation: "University of Strasbourg"
+  email: christophe.prudhomme@cemosis.fr
+title: "numpex/presentation.template - Template repository for presentations"
+version: 1.0.1
+abstract: >
+  This repository contains a LaTeX style for presentations in
+  the context of the French initiative for Exascale
+  computing NumPEx.
+
+keywords:
+  - Presentation
+  - Template
+  - NumPEx
+license: CC-BY-4.0
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.13343692
+date-released: 2024-08-19
+url: "https://github.com/numpex/presentation.template"
+references:
+  - type: grant
+    institution: French National Research Agency
+    number: ANR-22-EXNU-0003
+  - type: grant
+    institution: French National Research Agency
+    number: ANR-22-EXNU-0002
