@@ -89,232 +89,109 @@
 %\note[item]{Skills: which new profiles to hire? Which training programs?}
 \end{frame}
 
-\end{document}
-\begin{frame}[fragile]{NumPEx theme}
+\begin{frame}{Flagship Use-Case: DT Operations + AI Advisor}
 
-  The NumPEx theme is a Beamer theme with minimal visual noise
-  inspired by the
+\textbf{Why this use-case as a filter?}
+\begin{itemize}
+  \item \textbf{Operational Digital Twin:} real-time or near-real-time simulations (latency-critical)
+  \item \textbf{AI advisor:} suggests parameters, detects anomalies, optimizes online
+  \item \textbf{Stress-tests all 3 topics simultaneously}
+\end{itemize}
 
-  \vspace{0.1cm}
+\vspace{0.4cm}
+\begin{columns}[T]
+\column{0.32\textwidth}
+\alert{\textbf{T1: AI in HPC}}
+\begin{itemize}\small
+  \item Fast surrogates
+  \item ML closures
+  \item Guarantees, UQ
+  \item Out-of-domain detection
+\end{itemize}
 
-  \begin{center}
-    \alert{\href{https://www.info.gouv.fr/marque-de-letat}{Charte
-        graphique de l'etat Français}}
-  \end{center}
+\column{0.32\textwidth}
+\alert{\textbf{T2: AI as Oracle}}
+\begin{itemize}\small
+  \item Orchestration
+  \item Observability
+  \item Governance, audit
+  \item Trace exploitation
+\end{itemize}
 
-  \vspace{0.4cm}
+\column{0.32\textwidth}
+\alert{\textbf{T3: HPC for AI}}
+\begin{itemize}\small
+  \item Model updates
+  \item Training at scale
+  \item Data generation
+  \item Drift monitoring
+\end{itemize}
+\end{columns}
 
-  Enable the theme by loading
-
-\begin{verbatim}
-  \usetheme{numpex}
-\end{verbatim}
-
-  \vspace{0.4cm}
-
-  Note, that you have to have \emph{Marianne} font and XeTeX.
-  Install it to enjoy this wonderful typography. You can find the font
-
-  \vspace{0.1cm}
-
-  \begin{center}
-    \alert{\href{https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-de-l-identite-de-l-etat/typographie/}{here}}
-  \end{center}
+\note[item]{Operational DT must respond in seconds/minutes, not hours}
+\note[item]{AI advisor = system proposing actions (change process param, trigger maintenance)}
+\note[item]{This use-case combines all 3 topics: needs infrastructure (T3), surrogates (T1), agentic dev tools (T2)}
+\note[item]{Ask: "Who has similar use-cases? What are your pain points?"}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Sections}
+\begin{frame}{DT + AI Advisor: Operationalization Requirements}
 
-  Sections group slides of the same topic
+\textbf{This flagship use-case reveals critical requirements:}
 
-\begin{verbatim}
-    \section{Elements}
-\end{verbatim}
+\vspace{0.3cm}
+\begin{itemize}
+  \item \textbf{Lifecycle management:} versioning (model+data), drift monitoring, retraining triggers, rollback
+  \item \textbf{Auditability \& trust:} logs, provenance, responsibility, explainability
+  \item \textbf{Degraded modes:} safe fallback when AI is uncertain, default behaviors
+  \item \textbf{SLA/KPIs:} time-to-insight, energy-to-insight, confidence levels
+\end{itemize}
 
-  for which the NumPEx theme provides a nice progress indicator \ldots
+\vspace{0.4cm}
+\textbf{These requirements apply beyond DT:}
+\begin{itemize}
+  \item Online steering and optimization
+  \item Continuous data assimilation
+  \item Automated decision workflows
+  \item Any production AI-in-HPC system
+\end{itemize}
+
+\note[item]{Emphasize: operationalization is not an afterthought, it's a design requirement}
+\note[item]{These requirements apply to any "AI in production" scenario in HPC context}
+\note[item]{Ask: "Which of these requirements are you addressing in your projects?"}
 \end{frame}
 
-\section{Elements}
+% ============================================================
+% FRAME 6: Roadmap 2028 vs 2030 (milestones)
+% ============================================================
+\begin{frame}{Roadmap --- Milestones 2028 and 2030}
 
-\begin{frame}{Typography}
+\textbf{Milestone 2028 (mid-term)}
+\begin{itemize}
+  \item \textbf{T1:} 2--3 hybrid pilots (simulation + AI) in qualified production
+  \item \textbf{T2:} Agentic HPC tools (debug, tuning) with public benchmarks and eval suites
+  \item \textbf{T3:} LLM training/inference platform on 1--2 exascale machines (demonstrators)
+  \item \textbf{Cross-cutting:} First V\&V/UQ standards for AI in HPC; published energy/J metrics
+  \item \textbf{Pilots:} At least 1 operational DT + AI advisor demonstrator (stress-test validated)
+\end{itemize}
 
-The theme provides sensible defaults to \emph{emphasize}
-text, \alert{accent} parts or show \textbf{bold} results,
-also \emph{\textbf{combine both}}.
+\vspace{0.3cm}
+\textbf{Milestone 2030 (10-year vision)}
+\begin{itemize}
+  \item \textbf{T1:} Surrogates \& ML closures in mainstream codes (industrial certification)
+  \item \textbf{T2:} Agentic AI integrated in HPC workflows (CI/CD, generalized auto-tuning)
+  \item \textbf{T3:} HPC--AI co-design: hybrid architectures (CPU+GPU+NPU), mature sovereign stack
+  \item \textbf{Cross-cutting:} Shared benchmark/dataset/trace corpus; scientific MLOps training established
+  \item \textbf{Operationalization:} Lifecycle, auditability, SLA/KPIs standard practices
+\end{itemize}
+
+\note[item]{2028 = demonstrate feasibility, move out of labs}
+\note[item]{2030 = generalize, industrialize, train next generation}
+\note[item]{Emphasize: roadmap ≠ wish list, each item must have owner and resources}
+\note[item]{Ask: "What are the 3--5 most important outcomes for you?"}
 \end{frame}
-
-\begin{frame}{Lists}
-  \begin{columns}[onlytextwidth]
-    \column{0.5\textwidth}
-      Items
-      \begin{itemize}
-        \item Milk \item Eggs \item Potatoes
-      \end{itemize}
-
-    \column{0.5\textwidth}
-      Enumerations
-      \begin{enumerate}
-        \item First, \item Second and \item Last.
-      \end{enumerate}
-  \end{columns}
-\end{frame}
-\begin{frame}{Descriptions}
-  \begin{description}
-    \item[PowerPoint] Meeh.
-    \item[Beamer] Yeeeha.
-  \end{description}
-\end{frame}
-\begin{frame}{Animation}
-  \begin{itemize}[<+- | alert@+>]
-    \item \alert<4>{This is\only<4>{ really} important}
-    \item Now this
-    \item And now this
-  \end{itemize}
-\end{frame}
-
-
-\begin{frame}{Tables}
-  \begin{table}
-    \caption{Largest cities in the world (source: Wikipedia)}
-    \begin{tabular}{lr}
-      \toprule
-      City & Population\\
-      \midrule
-      Mexico City & 20,116,842\\
-      Shanghai & 19,210,000\\
-      Peking & 15,796,450\\
-      Istanbul & 14,160,467\\
-      \bottomrule
-    \end{tabular}
-  \end{table}
-\end{frame}
-\begin{frame}{Blocks}
-
-  \begin{block}{This is a block title}
-    Hello
-  \end{block}
-
-  \begin{exampleblock}{This is an example block}
-    Hello
-  \end{exampleblock}
-
-
-
-\end{frame}
-\begin{frame}{Math}
-  \begin{equation*}
-    e = \lim_{n\to \infty} {\left(1 + \frac{1}{n}\right)}^n
-  \end{equation*}
-\end{frame}
-
-\begin{frame}{Line plots}
-\begin{center}
-  \begin{tikzpicture}[domain=0:4]
-    \draw[very thin,color=gray] (-0.1,-1.1) grid (3.9,3.9);
-
-    \draw[->] (-0.2,0) -- (4.2,0) node[right] {$x$};
-    \draw[->] (0,-1.2) -- (0,4.2) node[above] {$f(x)$};
-
-    \draw[color=red]    plot (\x,\x)             node[right] {$f(x) =x$};
-    % \x r means to convert '\x' from degrees to _r_adians:
-    \draw[color=blue]   plot (\x,{sin(\x r)})    node[right] {$f(x) = \sin x$};
-    \draw[color=orange] plot (\x,{0.05*exp(\x)}) node[right] {$f(x) = \frac{1}{20} \mathrm e^x$};
-  \end{tikzpicture}
-\end{center}
-% \begin{figure}
-%     \begin{tikzpicture}
-%       \begin{axis}[
-%         mlineplot,
-%         width=0.9\textwidth,
-%         height=6cm,
-%       ]
-
-%         \addplot {sin(deg(x))};
-%         \addplot+[samples=100] {sin(deg(2*x))};
-
-%       \end{axis}
-%     \end{tikzpicture}
-%   \end{figure}
-\end{frame}
-
-
-\begin{frame}[fragile]{Bar charts}
-  \vspace{-0.8cm}
-  \begin{center}
-\begin{tikzpicture}
-\begin{axis}[
-  x tick label style={
-    /pgf/number format/1000 sep=},
-  ylabel=Population,
-  enlargelimits=0.15,
-  legend style={at={(0.5,-0.15)},
-    anchor=north,legend columns=-1},
-  ybar,
-  bar width=7pt,
-  ]
-  \addplot [color=nred, fill=nred!30]
-  coordinates {(1930,50e6) (1940,33e6)
-    (1950,40e6) (1960,50e6) (1970,70e6)};
-
-  \addplot [color=nblue, fill=nblue!30]
-  coordinates {(1930,38e6) (1940,42e6)
-    (1950,43e6) (1960,45e6) (1970,65e6)};
-
-  \addplot [color=ngreen, fill=ngreen!30]
-  coordinates {(1930,15e6) (1940,12e6)
-    (1950,13e6) (1960,25e6) (1970,35e6)};
-
-  \addplot[red,sharp plot,update limits=false]
-  coordinates {(1910,4.3e7) (1990,4.3e7)}
-  node[above] at (axis cs:1950,4.3e7) {Houses};
-
-  \legend{Far,Near,Here,Annot}
-\end{axis}
-\end{tikzpicture}  \end{center}
-
-\end{frame}
-
-
-
-\begin{frame}[fragile]{Code}
-
-  I love Fortran!
-
-  \vspace{0.5cm}
-
-\begin{lstlisting}[basicstyle=\tt\scriptsize, showlines=true]
-program pippo
-
-  integer, parameter            :: m=10, n=5
-  real(kind(1.d0)), allocatable :: a(:,:)
-
-  allocate(a(m,n))      ! allocate the matrix
-
-  call random_number(a) ! fill it up
-
-  call do_something(a)  ! do something on it
-
-  write(*,'("Hello world")')
-  stop
-
-end program pippo
-\end{lstlisting}
-
-\end{frame}
-
-\section{Conclusion}
-
-\begin{frame}{Summary}
-
-  Get the source of this theme and the demo presentation from
-
-  \begin{center}\url{https://github.com/numpex/presentation.template/}\end{center}
-
-\end{frame}
-
-\plain{Questions?}
 
 \end{document}
+
 
 %%% Local Variables:
 %%% mode: latex
