@@ -161,17 +161,181 @@
 \note[item]{Ask: "Which of these requirements are you addressing in your projects?"}
 \end{frame}
 
-\begin{frame}{AI-as-Oracle}
-  
+\begin{frame}{Framing Questions --- Post-Exascale HPC-AI Future}
+
+\textbf{In 10 years, what will computing look like?}
+\begin{itemize}\small
+  \item Supercomputers: fully AI-optimized, hybrid HPC-AI, or domain-specific?
+  \item Hardware: training-optimized (GPUs) vs low-latency hybrid (fast interconnect, synchronization)?
+  \item Bottleneck: interconnect bandwidth, data locality, or memory capacity?
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Key trade-offs and constraints:}
+\begin{itemize}\small
+  \item \alert{Energy:} J/solution vs J/insight vs CO₂/experiment?
+  \item \alert{Orchestration:} AI-assisted or fully automated workflows? Human-in-loop or not?
+  \item \alert{Sustainability:} Can HPC stacks keep pace with AI framework evolution?
+  \item \alert{Objective:} Time-to-solution or time-to-insight?
+\end{itemize}
+
+\note[item]{Set the stage for the three topic discussions}
+\note[item]{These questions will recur across T1, T2, T3}
+\note[item]{Capture divergent visions in parking lot}
 \end{frame}
 
-\begin{frame}{AI-in-HPC}
-  
+
+% T1 - AI in HPC
+\begin{frame}{T1: AI in HPC --- Hybrid Simulation (Post-Exascale)}
+
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Post-exascale drivers:}
+\begin{itemize}
+  \item Surrogates \& neural operators 
+  \item ML closures (when physics is too expensive)
+  \item Parameter inversion at scale
+  \item Multi-fidelity orchestration in optimization, UQ or inverse problems
+\end{itemize}
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=1.0,
+  box/.style={rectangle, rounded corners=3pt, minimum width=3.5cm, minimum height=1cm, align=center, font=\small}]
+
+  % Physics simulation box
+  \node[box, draw=nblue!80, fill=nblue!15, very thick] (phys) at (0,2) {Physics\\Simulation};
+
+  % ML component box
+  \node[box, draw=ngreen!80, fill=ngreen!15, very thick] (ml) at (0,0) {ML\\Component};
+
+  % Coupling arrows
+  \draw[->, very thick, draw=nblue!60] (phys.south) -- (ml.north) node[midway, right, font=\tiny] {data};
+  \draw[->, very thick, draw=ngreen!60] (ml.north) -- (phys.south) node[midway, left, font=\tiny] {correction};
+
+  % Output arrow
+  \draw[->, ultra thick, draw=nred!80] (2,1) -- (4.2,1) node[right, font=\small\bfseries] {Hybrid};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0.1cm}
+\textbf{Discussion questions:}
+\begin{itemize}\footnotesize
+  \item Which AI uses become \alert{standard}: surrogates, closures, online steering, mesh generation, autotuning?
+  \item Which domains will \alert{refuse AI-in-loop} (regulation, safety, reproducibility)?
+  \item \alert{Certification:} What to certify—code, model, pipeline, or final decision?
+  \item \alert{UQ:} Where does uncertainty come from—physics, numerics, data, AI? How to combine?
+  \item From \alert{interpretable} (physics-driven) to \alert{black-box} (foundation models): validation?
+\end{itemize}
+
+
+\note[item]{Keep this brief: 3-5 minutes maximum including discussion}
+\note[item]{Focus on post-exascale specific challenges (energy, scale, heterogeneity)}
+\note[item]{Capture key blockers in parking lot}
 \end{frame}
 
+% T2 - AI as Oracle
+\begin{frame}{T2: AI as Oracle --- Agentic Development (Post-Exascale)}
 
-\begin{frame}{HPC-for-AI}
-  
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Post-exascale needs:}
+\begin{itemize}
+  \item Code generation for extreme heterogeneity
+  \item Auto-tuning for complex architectures
+  \item AI-driven debugging at scale
+  \item Workflow orchestration \& automation
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=1.0,
+  box/.style={rectangle, rounded corners=3pt, minimum width=2.5cm, minimum height=0.8cm, align=center, font=\small}]
+
+  % Developer
+  \node[box, draw=nblue!80, fill=nblue!15, very thick] (dev) at (0,2.5) {Developer};
+
+  % AI Oracle (central)
+  \node[box, draw=nred!80, fill=nred!15, very thick, minimum width=3cm, minimum height=1cm] (ai) at (2.5,1.2) {AI\\Oracle};
+
+  % HPC System
+  \node[box, draw=ngreen!80, fill=ngreen!15, very thick] (hpc) at (0,0) {HPC\\System};
+
+  % Interactions
+  \draw[->, very thick, draw=nblue!60] (dev.east) -| (ai.north) node[near start, above, font=\tiny] {query};
+  \draw[->, very thick, draw=nred!60] (ai.north) |- (dev.east) node[near end, below, font=\tiny] {advice};
+  \draw[->, very thick, draw=ngreen!60] (hpc.east) -| (ai.south);
+  \draw[->, very thick, draw=nred!60] (ai.south) |- (hpc.east);
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0.1cm}
+\textbf{Discussion questions:}
+\begin{itemize}\footnotesize
+  \item \alert{Software Heritage} as training data: opportunity for France/Europe?
+  \item Can AI \alert{accelerate dev cycles} (porting, translation, optimization)?
+  \item \alert{Profiling oracles:} AI-driven analysis to identify bottlenecks?
+  \item \alert{Trace-based learning:} Collect structured traces to optimize partitioning, scheduling?
+  \item \alert{Trust \& benchmarking:} How to audit/validate AI-generated HPC code?
+\end{itemize}
+
+\note[item]{Keep this brief: 3-5 minutes maximum including discussion}
+\note[item]{Post-exascale = extreme heterogeneity, AI tools must handle complexity}
+\note[item]{Sovereignty: critical dependency on US-based LLM providers?}
+\end{frame}
+
+% T3 - HPC for AI
+\begin{frame}{T3: HPC for AI --- Training \& Inference (Post-Exascale)}
+
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Post-exascale challenges:}
+\begin{itemize}
+  \item Foundation models for science (PB-scale data)
+  \item Distributed training at extreme scale
+  \item Real-time inference for DT/steering
+  \item Co-design: CPU+GPU+NPU+emerging arch
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=1.0,
+  node/.style={rectangle, rounded corners=2pt, minimum width=0.7cm, minimum height=0.5cm, draw=nblue!80, fill=nblue!15, very thick}]
+
+  % HPC cluster (3x3 grid of nodes)
+  \foreach \x in {0,0.9,1.8} {
+    \foreach \y in {0,0.7,1.4} {
+      \node[node] at (\x,\y) {};
+    }
+  }
+  \node[font=\small, below] at (0.9, -0.5) {HPC Cluster};
+
+  % AI Foundation Model
+  \node[rectangle, rounded corners=5pt, draw=ngreen!80, fill=ngreen!15, very thick, minimum width=2.5cm, minimum height=1.2cm, align=center, font=\small] (model) at (4.5,0.7) {Foundation\\Model};
+
+  % Training arrow
+  \draw[->, ultra thick, draw=nred!80] (2.2,0.7) -- (model.west) node[midway, above, font=\small] {train};
+
+  % Data flow
+  \draw[->, thick, draw=nblue!60] (model.south) .. controls (3.5,-0.5) and (1.5,-0.5) .. (0.9,-0.2) node[midway, below, font=\tiny] {inference};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\vspace{0.1cm}
+\textbf{Discussion questions:}
+\begin{itemize}\footnotesize
+  \item \alert{Co-design:} Algorithms + architectures for transformers, foundation models?
+  \item \alert{Scalability:} Memory limits, heterogeneous arch, slow interconnects, low-precision?
+  \item \alert{Distributed learning:} Train on inherently distributed data (sim traces)?
+  \item \alert{Sovereignty:} Build-vs-buy for European AI-HPC stack?
+  \item \alert{Data:} Access, open models vs open data, PB-scale science datasets?
+\end{itemize}
+
+
+\note[item]{Keep this brief: 3-5 minutes maximum including discussion}
+\note[item]{Post-exascale energy budgets are constrained: must justify every J spent}
+\note[item]{European sovereignty: build vs buy for AI-HPC infrastructure?}
 \end{frame}
 
 \end{document}
