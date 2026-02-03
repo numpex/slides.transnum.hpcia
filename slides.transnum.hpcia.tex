@@ -14,7 +14,7 @@
 \title{HPC-AI convergence}
 \subtitle{AI-in-HPC, HPC-for-AI, AI-as-Oracle}
 \date{\today}
-\author{J Bobin, J. Gusak, C. Prud'homme, J.P. Vilotte}
+\author[Bobin, Gusak, Prud'homme, Vilotte]{J Bobin, J. Gusak, C. Prud'homme, J.P. Vilotte}
 \institute{PEPR NumPEx}
 
 \begin{document}
@@ -236,6 +236,29 @@
 \note[item]{Capture key blockers in parking lot}
 \end{frame}
 
+\begin{frame}{T1: AI-in-HPC}
+
+
+\vspace{0.3cm}
+\begin{itemize}
+    \item AI/HPC hybridisation is a challenge, is building a converged software stack possible ?\\
+    
+    \item AI and HPC software have different lifecyles, AI-based frameworks are rapidly evolving while the HPC software /application code evolution have longer lifecycles. Is is possible to build a sustainable AI/HPC software stack ? \\
+
+    \item AI-based frameworks are mainly developed by hyperscalers ? What is a "sovereign" AI/HPC software stack ?  
+    
+\end{itemize}
+  
+\end{frame}
+
+%How can we enable customization at multiple levels of the stack, while preserving stability of core components?
+%%Experience shows that the easier it is to contribute, the stronger the community support — and the longer software ecosystems survive.
+
+%How can AI agents actively contribute to customization and adaptation for new applications and architectures?
+%%In a vertically modular stack (e.g. Python → PyTorch → C++ → hardware kernels), agents could generate and maintain horizontal, application-specific branches.
+
+%How should we define the boundary between core functionality (stable, certified, shared) and application-specific extensions (fast-evolving, adaptive) across multiple layers of the stack?
+
 % T2 - AI as Oracle
 \begin{frame}{T2: AI as Oracle --- Agentic Development (Post-Exascale)}
 
@@ -327,20 +350,7 @@
 \end{frame}
 
 
-\begin{frame}{AI-in-HPC}
 
-
-\vspace{0.3cm}
-\begin{itemize}
-    \item AI/HPC hybridisation is a challenge, is building a converged software stack possible ?\\
-    
-    \item AI and HPC software have different lifecyles, AI-based frameworks are rapidly evolving while the HPC software /application code evolution longer lifecycles. Is tai \\
-
-    \item \textbf{Data:} \& how to ensure data availability (e.g. from simulations to traces/log) and trust, which are central for validation and robustness ?
-    
-\end{itemize}
-  
-\end{frame}
 
 % T3 - HPC for AI
 \begin{frame}{T3: HPC for AI --- Training \& Inference (Post-Exascale)}
@@ -388,7 +398,7 @@
   \item \alert{Sovereignty:} Build-vs-buy for European AI-HPC stack?
   \item \alert{Data:} Access, open models vs open data, PB-scale science datasets?
 \end{itemize}
-
+%Hardware utilization: With the growing diversity of inference and fine-tuning workloads, how can AI-based prediction complement existing HPC schedulers to make better, more adaptive decisions?
 
 \note[item]{Keep this brief: 3-5 minutes maximum including discussion}
 \note[item]{Post-exascale energy budgets are constrained: must justify every J spent}
