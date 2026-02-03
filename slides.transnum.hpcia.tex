@@ -26,14 +26,15 @@
 \textbf{Context and Stakes}
 \begin{itemize}
   \item \textbf{NumPEx post-exascale:} HPC--AI convergence is inevitable, but pathways are multiple
-  \item \textbf{Audience:} computer scientists, HPC mathematicians, decision-makers, ...
+  \item \textbf{Audience:} computer scientists,  mathematicians, decision-makers, ...
   \item \textbf{Horizon:} 10 years, milestones \textbf{2028} and \textbf{2030}
 \end{itemize}
 
 \vspace{0.3cm}
 \textbf{Success Criteria (end of workshop)}
 \begin{itemize}
-  \item A \textbf{shared vision} (X--Y key messages) for CSA positioning
+  \item A \textbf{shared vision} (key messages) for CSA positioning
+  \item A rough \textbf{Pareto curve HPC/AI} (?)
   \item A \textbf{roadmap} with concrete outcomes for 2028 and 2030
   \item \textbf{Sandboxes} projects to test ideas and build expertise
   \item Open \textbf{Guidelines} for our community and beyond
@@ -70,16 +71,16 @@
 \note[item]{We'll revisit each topic with cross-cutting requirements and the flagship use-case}
 \end{frame}
 
-\begin{frame}{Cross-Cutting Requirements --- Checklist for T1--T3}
+\begin{frame}{Cross-Cutting Requirements}
 
 \textbf{Apply systematically to each topic:}
 \begin{itemize}
   \item \textbf{Trust \& certification:} V\&V, UQ, reproducibility, traceability. What do we certify?
-  \item \textbf{Energy \& resource constraints:} J/solution vs J/insight, CO₂/experiment. Frugal post-exascale.
+  \item \textbf{Energy \& resource constraints:} J/solution vs J/insight, CO$_2$/experiment. Frugal post-exascale.
   \item \textbf{Software sustainability:} AI vs HPC pace, qualification, portability of stacks.
-  \item \textbf{Sovereignty:} build vs buy, lock-in, critical dependencies.
-  \item \textbf{Roles \& skills:} HPC software eng, scientific MLOps, data steward, performance engineer.
-  \item \textbf{Benchmarking \& reporting:} metrics, eval suites (prompts/tests for agentic HPC tools).
+  \item \textbf{Sovereignty:} build vs buy, lock-in, critical dependencies, public policies.
+  \item \textbf{Roles \& skills:} HPC software eng, scientific MLOps, data steward, performance engineer, HPC/AI domain application developers.
+  \item \textbf{Benchmarking \& reporting:} credible metrics, eval suites (prompts/tests for agentic HPC tools).
   \item \textbf{New technologies:} Quantum, Neuromorphic arch, Photonic in transit Computing
 \end{itemize}
 
@@ -173,8 +174,9 @@
 \vspace{0.3cm}
 \textbf{Key trade-offs and constraints:}
 \begin{itemize}\small
-  \item \alert{Energy:} J/solution vs J/insight vs CO₂/experiment?
-  \item \alert{Orchestration:} AI-assisted or fully automated workflows? Human-in-loop or not?
+  \item \alert{Energy:} J/solution vs J/insight vs CO$_2$/experiment?
+
+    \item \alert{Orchestration:} AI-assisted or fully automated workflows? Human-in-loop or not?
   \item \alert{Sustainability:} Can HPC stacks keep pace with AI framework evolution?
   \item \alert{Objective:} Time-to-solution or time-to-insight?
 \end{itemize}
@@ -200,6 +202,12 @@
   \item Multi-fidelity orchestration in optimization, UQ or inverse problems
 \end{itemize}
 \column{0.5\textwidth}
+\begin{figure}
+      \centering
+      \includegraphics[width=0.5\linewidth]{EnergyEfficientComputingScience-figure1.pdf}
+      \caption{Enter Caption}
+      \label{fig:placeholder}
+  \end{figure}
 \begin{center}
 \begin{tikzpicture}[scale=1.0,
   box/.style={rectangle, rounded corners=3pt, minimum width=3.5cm, minimum height=1cm, align=center, font=\small}]
