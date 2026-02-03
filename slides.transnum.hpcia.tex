@@ -248,7 +248,19 @@
     \item AI-based frameworks are mainly developed by hyperscalers ? What is a "sovereign" AI/HPC software stack ?  
     
 \end{itemize}
-  
+
+
+
+\vspace{0.3cm}
+\textbf{KPIs for T1 ?}
+\begin{itemize}\small
+  \item Speedup vs accuracy (e.g., 10× faster with $<$5\% error)
+  \item UQ coverage / confidence level (uncertainty quantification quality)
+  \item Energy-to-solution ratio (J/simulation with AI vs baseline)
+\end{itemize}
+
+%\note[item]{Focus on measurable outcomes for hybrid simulation}
+%\note[item]{KPIs should reflect both performance and trust}
 \end{frame}
 
 %How can we enable customization at multiple levels of the stack, while preserving stability of core components?
@@ -320,16 +332,6 @@
   \item \textbf{Data and qualification:} HPC codes are increasingly complex (e.g. heterogenous hardware), can AI be trusted for code generation at all levels of the software stack ? How to ensure the the qualification of AI-generated/orchestrated HPC codes ?
 \end{itemize}
 
- % \textbf{Apply systematically to each topic:}
-%\begin{itemize}
- % \item \textbf{Trust \& certification:} V\&V, UQ, reproducibility, %traceability. What do we certify?
- %\item \textbf{Energy \& resource constraints:} J/solution vs %J/insight, CO₂/experiment. Frugal post-exascale.
- % \item \textbf{Software sustainability:} AI vs HPC pace, %qualification, portability of stacks.
-  %\item \textbf{Sovereignty:} build vs buy, lock-in, critical %dependencies.
-  %\item \textbf{Roles \& skills:} HPC software eng, scientific MLOps, %data steward, performance engineer.
-  %\item \textbf{Benchmarking \& reporting:} metrics, eval suites %(prompts/tests for agentic HPC tools).
-  %\item \textbf{New technologies:} Quantum, Neuromorphic arch, %Photonic in transit Computing
-%\end{itemize}
 \end{frame}
 
   
@@ -344,9 +346,19 @@
     \item \textbf{Energy \& resource constraints:} AI has a significant energy cost. How to optimize the energy cost of AI for software development ? \\
 
     \item \textbf{Data:} \& how to ensure data availability (e.g. from simulations to traces/log) and trust, which are central for validation and robustness ?
-    
+
 \end{itemize}
 
+\vspace{0.3cm}
+\textbf{KPIs for T2 ?}
+\begin{itemize}\small
+  \item Developer productivity gain (time saved, bugs prevented, tasks automated)
+  \item Code quality metrics (correctness rate, performance regression rate)
+  \item Human review overhead (\% of AI output requiring manual validation)
+\end{itemize}
+
+%\note[item]{Measure both productivity and trust for AI-assisted development}
+% \note[item]{Balance automation with necessary human oversight}
 \end{frame}
 
 
@@ -355,19 +367,31 @@
 % T3 - HPC for AI
 \begin{frame}{T3: HPC for AI --- Training \& Inference (Post-Exascale)}
 
+\begin{center}
+\fcolorbox{nred!80}{nred!10}{%
+\begin{minipage}{0.88\textwidth}
+\centering\small
+\alert{\textbf{Not just FLOPs:}} qualified, reproducible, sustainable pipelines for science/DT.
+\end{minipage}
+}
+\end{center}
+
+\vspace{0.1cm}
 \begin{columns}[T]
 \column{0.5\textwidth}
 \textbf{Post-exascale challenges:}
-\begin{itemize}
+{\small
+\begin{itemize}\setlength{\itemsep}{1pt}
   \item Foundation models for science (PB-scale data)
   \item Distributed training at extreme scale
   \item Real-time inference for DT/steering
   \item Co-design: CPU+GPU+NPU+emerging arch
 \end{itemize}
+}
 
 \column{0.5\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=1.0,
+\begin{tikzpicture}[scale=0.95,
   node/.style={rectangle, rounded corners=2pt, minimum width=0.7cm, minimum height=0.5cm, draw=nblue!80, fill=nblue!15, very thick}]
 
   % HPC cluster (3x3 grid of nodes)
@@ -389,20 +413,45 @@
 \end{tikzpicture}
 \end{center}
 \end{columns}
-\vspace{0.1cm}
+\vspace{0.05cm}
 \textbf{Discussion questions:}
-\begin{itemize}\footnotesize
+{\footnotesize
+\begin{itemize}\setlength{\itemsep}{0pt}
   \item \alert{Co-design:} Algorithms + architectures for transformers, foundation models?
   \item \alert{Scalability:} Memory limits, heterogeneous arch, slow interconnects, low-precision?
   \item \alert{Distributed learning:} Train on inherently distributed data (sim traces)?
   \item \alert{Sovereignty:} Build-vs-buy for European AI-HPC stack?
   \item \alert{Data:} Access, open models vs open data, PB-scale science datasets?
 \end{itemize}
+}
 %Hardware utilization: With the growing diversity of inference and fine-tuning workloads, how can AI-based prediction complement existing HPC schedulers to make better, more adaptive decisions?
 
 \note[item]{Keep this brief: 3-5 minutes maximum including discussion}
 \note[item]{Post-exascale energy budgets are constrained: must justify every J spent}
 \note[item]{European sovereignty: build vs buy for AI-HPC infrastructure?}
+\end{frame}
+
+\begin{frame}{T3: HPC for AI}
+
+\begin{itemize}\small
+  \item \textbf{Trust / qualification:} what do we certify (code/model/pipeline/decision) for training \& inference? What tests + what drift monitoring?
+  \item \textbf{Energy \& frugality:} which KPI is binding (J/insight, CO₂/experiment) and what trade-offs are acceptable (precision, batch size, comms)?
+  \item \textbf{Sustainability of stacks:} how do we reconcile fast AI framework cycles with long HPC qualification/portability cycles?
+  \item \textbf{Sovereignty / build-vs-buy:} where is vendor lock-in acceptable vs unacceptable (frameworks, kernels, compilers, runtimes)?
+  \item \textbf{Skills / roles:} who operates this (scientific MLOps, perf engineer, data steward) and what is the minimum operating model?
+  \item \textbf{Benchmarking \& reporting:} shared benchmarks + periodic reports + prompt/eval suite for HPC agentic tools (regression gating).
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{KPIs for T3 ?}
+\begin{itemize}\small
+  \item Time-to-insight (not only throughput)
+  \item Energy-to-insight (J/insight)
+  \item Trust metric (QoI error + uncertainty coverage / generalization boundary)
+\end{itemize}
+
+\note[item]{These questions cut across the whole T3 scope}
+\note[item]{KPIs emphasize insight, not raw performance}
 \end{frame}
 
 \end{document}
