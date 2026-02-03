@@ -204,31 +204,31 @@
 \column{0.5\textwidth}
 \begin{figure}
       \centering
-      \includegraphics[width=0.5\linewidth]{EnergyEfficientComputingScience-figure1.pdf}
-      \caption{Enter Caption}
+      \includegraphics[width=\linewidth]{EnergyEfficientComputingScience-figure1.pdf}
+%      \caption{AI-in-HPC}
       \label{fig:placeholder}
   \end{figure}
-\begin{center}
-\begin{tikzpicture}[scale=1.0,
-  box/.style={rectangle, rounded corners=3pt, minimum width=3.5cm, minimum height=1cm, align=center, font=\small}]
-
-  % Physics simulation box
-  \node[box, draw=nblue!80, fill=nblue!15, very thick] (phys) at (0,2) {Physics\\Simulation};
-
-  % ML component box
-  \node[box, draw=ngreen!80, fill=ngreen!15, very thick] (ml) at (0,0) {ML\\Component};
-
-  % Coupling arrows
-  \draw[->, very thick, draw=nblue!60] (phys.south) -- (ml.north) node[midway, right, font=\tiny] {data};
-  \draw[->, very thick, draw=ngreen!60] (ml.north) -- (phys.south) node[midway, left, font=\tiny] {correction};
-
-  % Output arrow
-  \draw[->, ultra thick, draw=nred!80] (2,1) -- (4.2,1) node[right, font=\small\bfseries] {Hybrid};
-\end{tikzpicture}
-\end{center}
+%\begin{center}
+%\begin{tikzpicture}[scale=1.0,
+%  box/.style={rectangle, rounded corners=3pt, minimum width=3.5cm, minimum height=1cm, align=center, font=\small}]
+%
+%  % Physics simulation box
+%  \node[box, draw=nblue!80, fill=nblue!15, very thick] (phys) at (0,2) {Physics\\Simulation};
+%
+%  % ML component box
+%  \node[box, draw=ngreen!80, fill=ngreen!15, very thick] (ml) at (0,0) {ML\\Component};
+%
+%  % Coupling arrows
+%  \draw[->, very thick, draw=nblue!60] (phys.south) -- (ml.north) node[midway, right, font=\tiny] {data};
+%  \draw[->, very thick, draw=ngreen!60] (ml.north) -- (phys.south) node[midway, left, font=\tiny] {correction};
+%
+%  % Output arrow
+%  \draw[->, ultra thick, draw=nred!80] (2,1) -- (4.2,1) node[right, font=\small\bfseries] {Hybrid};
+%\end{tikzpicture}
+%\end{center}
 \end{columns}
 
-\vspace{0.1cm}
+\vspace{-0.3cm}
 \textbf{Discussion questions:}
 \begin{itemize}\footnotesize
   \item Which AI uses become \alert{standard}: surrogates, closures, online steering, mesh generation, autotuning?
@@ -450,12 +450,13 @@
   \item \textbf{Benchmarking \& reporting:} shared benchmarks + periodic reports + prompt/eval suite for HPC agentic tools (regression gating).
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{-0.1cm}
 \textbf{KPIs for T3 ?}
 \begin{itemize}\small
   \item Time-to-insight (not only throughput)
   \item Energy-to-insight (J/insight)
   \item Trust metric (QoI error + uncertainty coverage / generalization boundary)
+  \item {\footnotesize \emph{Engineering diagnostics:} GPU efficiency (MFU), scaling efficiency.}
 \end{itemize}
 
 \note[item]{These questions cut across the whole T3 scope}
